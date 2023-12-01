@@ -2,10 +2,10 @@ import java.io.File;
 
 public class Main {
     private static String path1 = "D:" + File.separator + "Games" + File.separator;
-    private static String path2 = "D:" + File.separator + "Games" + "src" + File.separator;
-    private static String path3 = "D:" + File.separator + "Games" + "res" + File.separator;
-    private static String path4 = "D:" + File.separator + "Games" + "src" + File.separator + "main" + File.separator;
-    private static String path5 = "D:" + File.separator + "Games" + "temp" + File.separator;
+    private static String path2 = "D:" + File.separator + "Games" + File.separator + "src" + File.separator;
+    private static String path3 = "D:" + File.separator + "Games" + File.separator + "res" + File.separator;
+    private static String path4 = "D:" + File.separator + "Games" + File.separator + "src" + File.separator + "main" + File.separator;
+    private static String path5 = "D:" + File.separator + "Games" + File.separator + "temp" + File.separator;
     private static StringBuilder forDirectoriesAndFiles = new StringBuilder();
     static String separator = System.lineSeparator();
 
@@ -19,6 +19,15 @@ public class Main {
         //В каталоге src создайте две директории: main, test
         createMainDirectory("main");
         createTestDirectory("test");
+        //В подкаталоге main создайте два файла: Main.java, Utils.java.
+        createMainFiles("main");
+    }
+
+    private static void createMainFiles(String nameFile) {
+        File main2 = new File(path4 + nameFile);
+        if (main2.mkdir()) {
+            forDirectoriesAndFiles.append("Файл " + main2.isFile() + " была создан");
+        }
     }
 
     public static void createSrcDirectory(String nameDir) {
@@ -54,7 +63,9 @@ public class Main {
         if (main.mkdir()) {
             forDirectoriesAndFiles.append(separator).append("Директория " + main.getName() + " была создана");
         }
+
     }
+
     private static void createTestDirectory(String nameDir) {
         File test = new File(path2 + nameDir);
         if (test.mkdir()) {
