@@ -1,77 +1,63 @@
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class Main {
-    private static String path1 = "D:" + File.separator + "Games" + File.separator;
-    private static String path2 = "D:" + File.separator + "Games" + File.separator + "src" + File.separator;
-    private static String path3 = "D:" + File.separator + "Games" + File.separator + "res" + File.separator;
-    private static String path4 = "D:" + File.separator + "Games" + File.separator + "src" + File.separator + "main" + File.separator;
-    private static String path5 = "D:" + File.separator + "Games" + File.separator + "temp" + File.separator;
-    private static StringBuilder forDirectoriesAndFiles = new StringBuilder();
-    static String separator = System.lineSeparator();
-
-
     public static void main(String[] args) {
-        //В папке Games создайте несколько директорий: src, res, savegames, temp.
-        createSrcDirectory("src");
-        createResDirectory("res");
-        createSaveGamesDirectory("savegames");
-        createTempDirectory("temp");
-        //В каталоге src создайте две директории: main, test
-        createMainDirectory("main");
-        createTestDirectory("test");
-        //В подкаталоге main создайте два файла: Main.java, Utils.java.
-        createMainFiles("main");
-    }
-
-    private static void createMainFiles(String nameFile) {
-        File main2 = new File(path4 + nameFile);
-        if (main2.mkdir()) {
-            forDirectoriesAndFiles.append("Файл " + main2.isFile() + " была создан");
+        StringBuilder sb = new StringBuilder();
+        //cоздаем папки src, main, test и файлы Main,Utils
+        if (createDir(sb, "Games/src")) {
+            if (createDir(sb, "Games/src/main")) {
+                createFile(sb, "Games/src/main/Main.java");
+                createFile(sb, "Games/src/main/Utils.java");
+            }
+            createDir(sb, "Games/src/test");
+        }
+        //cоздаем папку res и три директории: drawables, vectors, icons.
+        if (createDir(sb, "Games/res")) {
+            createDir(sb, "Games/res/drawables");
+            createDir(sb, "Games/res/vectors");
+            createDir(sb, "Games/res/icons");
+        }
+        //cоздаем папку savegames
+        createDir(sb, "Games/savegames");
+        //cоздаем папку temp и текстовый файл внутри
+        if (createDir(sb, "Games/temp")) {
+            if (createFile(sb, "Games/temp/temp.txt")) {
+                try (FileWriter writer = new FileWriter("Games/temp/temp.txt", false)) {
+                    writer.write(sb.toString());
+                    writer.flush(); //Метод выводит данные из буфера и помещает их в предназначенное для них место
+                } catch (IOException ex) {
+                    System.out.println(ex.getMessage());
+                }
+            }
         }
     }
 
-    public static void createSrcDirectory(String nameDir) {
-        File src = new File(path1 + nameDir);
-        if (src.mkdir()) {
-            forDirectoriesAndFiles.append("Директория " + src.getName() + " была создана");
+    //метод создания директорий
+    public static boolean createDir(StringBuilder sb, String dirPath) {
+        File dir = new File(dirPath);
+        if (dir.mkdir()) {
+            sb.append("Каталог " + dirPath + " создан успешно");
+            return true;
+        } else {
+            sb.append("Каталог " + dirPath + " не был создан");
+            return false;
         }
     }
 
-    public static void createResDirectory(String nameDir) {
-        File res = new File(path1 + nameDir);
-        if (res.mkdir()) {
-            forDirectoriesAndFiles.append(separator).append("Директория " + res.getName() + " была создана");
+    //метод создания файлов
+    public static boolean createFile(StringBuilder sb, String fileName) {
+        File file = new File(fileName);
+        try {
+            if (file.createNewFile()) {
+                sb.append("Файл " + fileName + " создан успешно");
+                return true;
+            }
+        } catch (IOException ex) {
+            sb.append("Файл " + fileName + " не был создан");
         }
-    }
-
-    private static void createSaveGamesDirectory(String nameDir) {
-        File saveGames = new File(path1 + nameDir);
-        if (saveGames.mkdir()) {
-            forDirectoriesAndFiles.append("Директория " + saveGames.getName() + " была создана");
-        }
-    }
-
-    private static void createTempDirectory(String nameDir) {
-        File temp = new File(path1 + nameDir);
-        if (temp.mkdir()) {
-            forDirectoriesAndFiles.append(separator).append("Директория " + temp.getName() + " была создана");
-        }
-    }
-
-    private static void createMainDirectory(String nameDir) {
-        File main = new File(path2 + nameDir);
-        if (main.mkdir()) {
-            forDirectoriesAndFiles.append(separator).append("Директория " + main.getName() + " была создана");
-        }
-
-    }
-
-    private static void createTestDirectory(String nameDir) {
-        File test = new File(path2 + nameDir);
-        if (test.mkdir()) {
-            forDirectoriesAndFiles.append("Директория " + test.getName() + " была создана");
-        }
+        return false;
     }
 }
-
 
